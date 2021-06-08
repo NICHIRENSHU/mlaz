@@ -2,7 +2,12 @@
 #define SUBIRANE_H
 
 
-extern int calc_sum(int sub1, int sub2);
+typedef struct {
+    int sub1;
+    int sub2;
+} subirane;
+
+extern int *calc_sum(void *smth);
 
 
 #endif /* SUBIRANE_H */

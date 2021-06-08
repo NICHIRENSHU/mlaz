@@ -28,7 +28,7 @@ void change_smth1(int rt)
 int promenliva1 = 5;
 int* p = &promenliva1;
 
-int calc_sum(int sub1, int sub2)
+int *calc_sum(void *smth)
 {
     printf("promenliva1 = %d\n", promenliva1);
     change_smth(&promenliva1);
@@ -42,7 +42,15 @@ int calc_sum(int sub1, int sub2)
 
     printf("promenliva1 = %d\n", promenliva1);
 
-    return sub1+sub2;  
+
+    subirane * sub = smth;
+    int bla1 = sub->sub1;
+    int bla2 = sub->sub2;
+
+    printf("bla1 = %d\n", bla1);
+    printf("bla2 = %d\n", bla2);
+
+    return (void*)(bla1+bla2);
 }
 
 
