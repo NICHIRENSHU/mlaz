@@ -35,7 +35,7 @@ int *calc_sum(void *smth)
     printf("promenliva1 = %d\n", promenliva1);
 
     printf("%p\n", p);
-    change_test1(p);
+    change_test1(&p);
     printf("%p\n", p);
     change_test2(&p);
     printf("%p\n", p);
