@@ -284,13 +284,15 @@ void read_mouse(void * device)
  * ****************************************/
 int main(int argc, char **argv) 
 {
-
     printf("Start\n");
+
+    /////////////////////////////// zad 1 - add two numbers //////////////////////////////
+    if(argc < 3)printf("Please put arguments\n");
+
     int sub1 = argv[1][0]-0x30;
     int sub2 = atoi(argv[2]);
     printf("var1 = %d\n", sub1);
     printf("var2 = %d\n", sub2);
-    //int res = calc_sum(sub1,sub2);
 
     int res;
     subirane sub;
@@ -300,20 +302,64 @@ int main(int argc, char **argv)
     pthread_create(&thread_id1, NULL, calc_sum, (void *)&sub);
     void * ressult = NULL;
     pthread_join(thread_id1, &ressult);
-
     printf("res = %d\n", (int *)ressult);
 
 
-    pthread_t thread_id2;
-    pthread_create(&thread_id2, NULL, read_mouse, (void *)"/dev/input/event5");
 
-	pthread_t thread_id3;
-    pthread_create(&thread_id3, NULL, read_mouse, (void *)"/dev/input/event11");
+    // /////////////////////////////// zad 2 - read two HID devices from /dev/input/ folder //////////////////////////////
+    // pthread_t thread_id2;
+    // pthread_create(&thread_id2, NULL, read_mouse, (void *)"/dev/input/event5");
+	// pthread_t thread_id3;
+    // pthread_create(&thread_id3, NULL, read_mouse, (void *)"/dev/input/event11");
+    // pthread_join(thread_id2, NULL);
+	// pthread_join(thread_id3, NULL);
 
-    pthread_join(thread_id2, NULL);
-	pthread_join(thread_id3, NULL);
+
+
+    ///////////////////////////// zad 3 - add two numbers by callign external program (bc) //////////////////////////////
+    FILE *pipe_fp;
+    char write_buf[100];
+    /* Create one way pipe line with call to popen() */
+    if (( pipe_fp = popen("bc", "w")) == NULL)
+    {
+        perror("popen");
+        exit(1);
+    }
+    /* Processing loop */
+    strcpy(write_buf, argv[1]);
+    strcat(write_buf,"+");
+    strcat(write_buf, argv[2]);
+    printf("%s\n",write_buf);
+
+    //fputs(write_buf, pipe_fp);
+    fprintf(pipe_fp, "%s\n", write_buf);
+    fflush(pipe_fp);
+    /* Close the pipe */
+    pclose(pipe_fp);
+
+                        ///////// 
+    // FILE *pipe_fp;
+    // char write_buf[100];
+    char read_buf[100];
+
+    strcpy(write_buf,"echo \"");
+    strcat(write_buf, argv[1]);
+    strcat(write_buf,"+");
+    strcat(write_buf, argv[2]);
+    strcat(write_buf, "\" | bc");
+    printf("%s\n",write_buf);
+    /* Create one way pipe line with call to popen() */
+    if (( pipe_fp = popen(write_buf, "r")) == NULL)
+    {
+        perror("popen");
+        exit(1);
+    }
+    /* Processing loop */
+    fgets(read_buf, sizeof(read_buf), pipe_fp);
+    printf("%s", read_buf);
+    /* Close the pipe */
+    pclose(pipe_fp);
 
 	printf("STOP\n");
-    
     return 0;
 }
